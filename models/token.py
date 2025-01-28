@@ -1,3 +1,6 @@
+from datetime import datetime
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -38,6 +41,14 @@ class TokenResponse(BaseModel):
     client_id: str
 
 
+class ProfileModel(BaseModel):
+    first_name: str
+    middle_name: Optional[str] = None
+    last_name: str
+    date_birth: Optional[datetime] = None
+
+
 class RegisterRequest(BaseModel):
     username: str
     password: str
+    profile: ProfileModel

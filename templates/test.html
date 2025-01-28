@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://c0f4f41c-2f55-4863-921b-sdk-docs.github.io/cdn/metamask-sdk.js"></script>
+        <link rel="stylesheet" href="">
+        <script>
+            const sdk = new MetaMaskSDK.MetaMaskSDK({
+                logging: {
+                    developerMode: true,
+                },
+                dappMetadata: {
+                    name: "Example Pure JS Dapp",
+                },
+                infuraAPIKey: "c79bf916b55a4c13b487a501a8b8ae87",
+            });
+        </script>
+        
+    </head>
+    <body>
+        <button onclick="connect()">Connect</button>
+        <button onclick="connectAndSign()">Connect and sign</button>
+        <button onclick="sign()">Sign</button>
+        <button onclick="getAccount()">Get accounts</button>
+        <h2>Account: <span class="showAccount"></span></h2>
+        <div class="siweResult"></div>
+
+        <script>
+            const showAccount = document.querySelector(".showAccount")
+            const siweResult = document.querySelector(".siweResult")
+            let provider;
+            const message = {
+                test: "test",
+                test2: "test"
+            };
+            const messageString = JSON.stringify(message);
+            let accounts;
+
+            function connect() {
+                sdk.connect()
+                .then((res) => {
+                    provider = sdk.getProvider();
+                })
+                .catch((e) => console.log('request accounts ERR', e));
+            }
+
+            async function getAccount() {
+                accounts = await provider // Or window.ethereum if you don't support EIP-6963.
+                    .request({ method: "eth_requestAccounts" })
+                    .catch((err) => {
+                        if (err.code === 4001) {
+                            console.log("Please connect to MetaMask.")
+                        } else {
+                            console.error(err)
+                        }
+                    })
+                showAccount.innerHTML = accounts[0];
+            }
+
+            const connectAndSign = async () => {
+                try {
+                    const signResult = await sdk?.connectAndSign({
+                        msg: messageString,
+                    })
+                    console.log(signResult)
+                } catch (err) {
+                    console.warn("failed to connect..", err)
+                }
+            }
+
+            const convertToHex = (str) => {
+                var hex = '';
+                for(var i=0;i<str.length;i++) {
+                    hex += ''+str.charCodeAt(i).toString(16);
+                }
+                return hex;
+            }
+
+            const sign = async () => {
+                try {
+                    const from = accounts[0];
+                    const msghex = convertToHex(messageString);
+                    console.log(msghex)
+                    //const msg = `0x${Buffer.from(message, "utf8").toString("hex")}`;
+                    const msg = `0x${msghex}`;
+                    const sign = await provider // Or window.ethereum if you don't support EIP-6963.
+                    .request({
+                        method: "personal_sign",
+                        params: [msg, from],
+                    })
+                    siweResult.innerHTML = sign
+                } catch (err) {
+                    console.error(err)
+                    siweResult.innerHTML = `Error: ${err.message}`
+                }
+            }
+        </script>
+    </body>
+</html>

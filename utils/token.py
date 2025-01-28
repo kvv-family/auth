@@ -42,7 +42,7 @@ def create_access_token(
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, setting.SECRET_KEY, algorithm=setting.ALGORITHM)
     with db_session:
-        AccessToken(user=user, client=client, access_token=encoded_jwt)
+        AccessToken(user=user.id, client=client.id, access_token=encoded_jwt)
     return encoded_jwt
 
 
