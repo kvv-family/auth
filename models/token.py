@@ -4,11 +4,6 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-# Модель токена данных
-class TokenData(BaseModel):
-    username: str | None = None
-
-
 class AuthorizeRequest(BaseModel):
     username: str
     password: str
@@ -52,3 +47,8 @@ class RegisterRequest(BaseModel):
     username: str
     password: str
     profile: ProfileModel
+
+
+class TokenData(BaseModel):
+    username: str
+    user_id: int

@@ -1,20 +1,20 @@
 from typing import Annotated, Literal
+from uuid import uuid4
 
-from fastapi import Form, HTTPException
+from fastapi import Depends, Form, HTTPException
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, Response
 from fastapi.routing import APIRouter
-from pony.orm import db_session, commit
+from pony.orm import commit, db_session
 
-from db import User, Profile
+from db import Profile, User
 from exception import AuthorizeException, AuthorizeTemplateException
 from models import ErrorMessage
-from models.token import RegisterRequest
-from settings import TEMPLATES, sessin_backend, cookie
-from utils import clients, users, token
-from utils.password import hash_password
-from uuid import uuid4
 from models.session import SessionData
+from models.token import RegisterRequest, TokenData
+from settings import TEMPLATES, cookie, sessin_backend, session_verifier
+from utils import clients, token, users
+from utils.password import hash_password
 
 auth_router = APIRouter(tags=["auth"])
 
@@ -37,20 +37,22 @@ async def register(data: RegisterRequest):
 
 
 # Форма для авторизации
-@auth_router.get("/authorize")
+@auth_router.get("/authorize", dependencies=[Depends(cookie)])
 async def authorize(
     request: Request,
     client_id: str,
     redirect_uri: str,
     scope: str,
     state: str,
+    session_data=Depends(session_verifier),
 ):
+    print(session_data)
     try:
-        # Блок получения клиента
-        client = clients.get_client(client_id=client_id, redirect_uri=redirect_uri)
+        # Блок получения клиента и проверки клиента
+        client = clients.get_client(client_id=client_id, redirect_uri=redirect_uri)  # noqa: F841
     except AuthorizeException as exc:
         raise AuthorizeTemplateException(detail=exc.detail)
-    # client = clients.get_client(client_id=client_id, redirect_uri=redirect_uri)
+
     return TEMPLATES.TemplateResponse(
         request=request,
         name="login.html",
@@ -85,7 +87,11 @@ async def authorize_post(
             raise AuthorizeTemplateException(detail=exc.detail)
         else:
             raise HTTPException(status_code=401, detail=exc.detail)
-    code = token.create_access_token(client=client, user=user, data={})
+    code, refresh = token.create_access_token(
+        client=client,
+        user=user,
+        data=TokenData(username=user.username, user_id=user.id),
+    )
     url = f"{redirect_uri}{code}"
     if form == "form":
         if not redirect_uri:
@@ -93,7 +99,7 @@ async def authorize_post(
                 detail={"message": "Redirect url not found"}
             )
         session = uuid4()
-        data = SessionData(user_id=user.id, token=code)
+        data = SessionData(user_id=user.id, token=code, refresh=refresh)
         await sessin_backend.create(session, data=data)
         response_redirect = RedirectResponse(url=url)
         cookie.attach_to_response(response=response_redirect, session_id=session)

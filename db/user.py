@@ -23,6 +23,7 @@ class User(db.Entity):
     hashed_password = Required(str)
     codes = Set("AuthorizationCode")
     tokens = Set("AccessToken")
+    refresh = Set("RefreshToken")
     profile = Required(Profile)
     created_at = Optional(datetime)
 

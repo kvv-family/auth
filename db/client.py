@@ -11,6 +11,7 @@ class Client(db.Entity):
     redirect_urls = Set("UrlRedirect")
     codes = Set("AuthorizationCode")
     tokens = Set("AccessToken")
+    refresh = Set("RefreshToken")
     scope = Required(str)
 
 

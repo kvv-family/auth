@@ -16,6 +16,7 @@ from models.session import BasicVerifier, SessionData
 
 class Settings(BaseSettings):
     SECRET_KEY: str | None = None
+    REFRESH_EXPIRE: int = 30
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     DOMAIN: str = "127.0.0.1:8000"
@@ -62,9 +63,9 @@ W3 = Web3(EthereumTesterProvider())
 cookie_params = CookieParameters()
 
 cookie = SessionCookie(
-    cookie_name="cookie",
+    cookie_name="session",
     identifier="general_verifier",
-    auto_error=True,
+    auto_error=False,
     secret_key=setting.SECRET_KEY,
     cookie_params=cookie_params,
 )
@@ -72,7 +73,7 @@ cookie = SessionCookie(
 sessin_backend = InMemoryBackend[UUID, SessionData]()
 session_verifier = BasicVerifier(
     identifier="general_verifier",
-    auto_error=True,
+    auto_error=False,
     backend=sessin_backend,
     auth_http_exception=HTTPException(status_code=403, detail="invalid session"),
 )

@@ -9,6 +9,7 @@ from pydantic import BaseModel
 class SessionData(BaseModel):
     user_id: int
     token: str
+    refresh: str
 
 
 class BasicVerifier(SessionVerifier[UUID, SessionData]):
