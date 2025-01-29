@@ -1,4 +1,4 @@
-from pony.orm import Required
+from pony.orm import Required, Set
 
 from .base import db
 from .client import Client
@@ -10,10 +10,19 @@ class AuthorizationCode(db.Entity):
     code = Required(str, unique=True)
     user = Required(User)
     client = Required(Client)
+    active = Required(bool, default=True)
+
+
+class RefreshToken(db.Entity):
+    token = Required(str, unique=True)
+    user = Required(User)
+    client = Required(Client)
+    access_tokens = Set("AccessToken")
 
 
 # Модель токена доступа
 class AccessToken(db.Entity):
-    access_token = Required(str, unique=True)
+    token = Required(str, unique=True)
+    refresh = Required(RefreshToken)
     user = Required(User)
     client = Required(Client)

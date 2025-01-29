@@ -60,6 +60,8 @@ def save_keys_to_file(private_key: RSAPrivateKey, public_key: RSAPublicKey):
 
 
 def check_keys_file_exists():
+    """Функция проверки ключей и их генерация
+    """    
     if (
         not os.path.exists(BASE_DIR / "keys")
         or not os.path.exists(BASE_DIR / "keys/private_key.pem")
