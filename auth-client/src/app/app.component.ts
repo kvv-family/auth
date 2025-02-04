@@ -1,15 +1,9 @@
 import { Component } from '@angular/core';
-import { CardModule } from 'primeng/card';
-import { PasswordModule } from 'primeng/password';
-import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IftaLabelModule } from 'primeng/iftalabel';
-import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [CardModule, PasswordModule, IftaLabelModule, InputTextModule, ButtonModule, FormsModule, ReactiveFormsModule, ToggleSwitchModule],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

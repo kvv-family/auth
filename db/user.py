@@ -10,6 +10,7 @@ from .base import db
 class Profile(db.Entity):
     id = PrimaryKey(int, auto=True)
     user = Optional("User")
+    email = Required(str)
     first_name = Required(str)
     middle_name = Optional(str)
     last_name = Required(str)

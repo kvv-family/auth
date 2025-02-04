@@ -40,18 +40,18 @@ async def register(data: RegisterRequest):
 @auth_router.get("/authorize", dependencies=[Depends(cookie)])
 async def authorize(
     request: Request,
-    client_id: str,
-    redirect_uri: str,
-    scope: str,
-    state: str,
+    client_id: str = None,
+    redirect_uri: str = None,
+    scope: str = None,
+    state: str = None,
     session_data=Depends(session_verifier),
 ):
-    print(session_data)
-    try:
-        # Блок получения клиента и проверки клиента
-        client = clients.get_client(client_id=client_id, redirect_uri=redirect_uri)  # noqa: F841
-    except AuthorizeException as exc:
-        raise AuthorizeTemplateException(detail=exc.detail)
+    if client_id:
+        try:
+            # Блок получения клиента и проверки клиента
+            client = clients.get_client(client_id=client_id, redirect_uri=redirect_uri)  # noqa: F841
+        except AuthorizeException as exc:
+            raise AuthorizeTemplateException(detail=exc.detail)
 
     return TEMPLATES.TemplateResponse(
         request=request,
