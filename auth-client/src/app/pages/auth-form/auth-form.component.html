@@ -1,31 +1,63 @@
 <p-card class="card-auth">
-    <ng-template #header>
-        <p class="text-xl text-center m-3">Добро пожаловать</p>
-    </ng-template>
+  <ng-template #header>
+    <p class="text-xl text-center m-3">Добро пожаловать</p>
+  </ng-template>
 
-    <form class="card-auth-form w-full" [formGroup]="authForm">
-        <input class="w-full" pInputText id="username" formControlName="username" placeholder="Логин">
-        <p-password class="w-full" id="password" [feedback]="false" formControlName="password" placeholder="Пароль"
-            [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full"></p-password>
-        <div class="w-full flex gap-4 items-center">
-            <p-toggleSwitch id="remeber" />
-            <label for="remeber" class="text-sm text-center">Запомнить?</label>
-        </div>
-
-        <p-button class="w-full" styleClass="w-full" variant="outlined">Войти</p-button>
-    </form>
-    <span class="text-xs">У вас нет учетной записи? <span class="text-sm">Зарегистрируйтесь</span></span>
-    <p-divider />
-    <p class="text-center">Войти через</p>
-    <div class="flex gap-2 m-2 justify-center">
-        <p-button variant="outlined" styleClass="p-2" [pTooltip]="'ЭЦП'" tooltipPosition="top" [disabled]="true">
-            <i class="pi pi-key"></i>
-        </p-button>
-        @for (service of services; track service.name) {
-        <p-button variant="outlined" styleClass="p-2" [pTooltip]="service.tooltip" tooltipPosition="top"
-            [disabled]="service.disabled">
-            <img class="w-4 h-4" [src]="'assets/systems/' + service.icon" />
-        </p-button>
-        }
+  <form class="card-auth-form w-full" [formGroup]="authForm">
+    <input
+      class="w-full"
+      pInputText
+      id="username"
+      formControlName="username"
+      placeholder="Логин"
+    />
+    <p-password
+      class="w-full"
+      id="password"
+      [feedback]="false"
+      formControlName="password"
+      placeholder="Пароль"
+      [toggleMask]="true"
+      styleClass="w-full"
+      inputStyleClass="w-full"
+    ></p-password>
+    <div class="w-full flex gap-4 items-center">
+      <p-toggleSwitch id="remeber" />
+      <label for="remeber" class="text-sm text-center">Запомнить?</label>
     </div>
+
+    <p-button class="w-full" styleClass="w-full" variant="outlined"
+      >Войти</p-button
+    >
+  </form>
+  <span class="text-xs"
+    >У вас нет учетной записи?
+    <span class="text-sm cursor-pointer font-bold"
+      >Зарегистрируйтесь</span
+    ></span
+  >
+  <p-divider />
+  <p class="text-center">Войти через</p>
+  <div class="flex gap-2 m-2 justify-center">
+    <p-button
+      variant="outlined"
+      styleClass="p-2"
+      [pTooltip]="'ЭЦП'"
+      tooltipPosition="top"
+      [disabled]="true"
+    >
+      <i class="pi pi-key"></i>
+    </p-button>
+    @for (service of services; track service.name) {
+    <p-button
+      variant="outlined"
+      styleClass="p-2"
+      [pTooltip]="service.tooltip"
+      tooltipPosition="top"
+      [disabled]="service.disabled"
+    >
+      <img class="w-4 h-4" [src]="'assets/systems/' + service.icon" />
+    </p-button>
+    }
+  </div>
 </p-card>

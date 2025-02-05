@@ -5,27 +5,27 @@
 @layer tailwind-base, primeng, tailwind-utilities;
 
 @layer tailwind-base {
-    @tailwind base;
+  @tailwind base;
 }
 
 @layer tailwind-utilities {
-    @tailwind components;
-    @tailwind utilities;
+  @tailwind components;
+  @tailwind utilities;
 }
 
 .card-auth {
-    max-width: 400px;
-    max-height: 500px;
+  max-width: 400px;
+  max-height: 500px;
+  display: flex;
+  margin: auto;
+
+  .p-card-title {
+    text-align: center;
+  }
+
+  .card-auth-form {
     display: flex;
-    margin: auto;
-
-    .p-card-title {
-        text-align: center;
-    }
-
-    .card-auth-form {
-        display: flex;
-        flex-direction: column;
-        row-gap: 1rem;
-    }
+    flex-direction: column;
+    row-gap: 1rem;
+  }
 }
