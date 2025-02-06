@@ -1,63 +1,204 @@
-<p-card class="card-auth">
-  <ng-template #header>
-    <p class="text-xl text-center m-3">Добро пожаловать</p>
-  </ng-template>
-
-  <form class="card-auth-form w-full" [formGroup]="authForm">
-    <input
-      class="w-full"
-      pInputText
-      id="username"
-      formControlName="username"
-      placeholder="Логин"
-    />
-    <p-password
-      class="w-full"
-      id="password"
-      [feedback]="false"
-      formControlName="password"
-      placeholder="Пароль"
-      [toggleMask]="true"
-      styleClass="w-full"
-      inputStyleClass="w-full"
-    ></p-password>
-    <div class="w-full flex gap-4 items-center">
-      <p-toggleSwitch id="remeber" />
-      <label for="remeber" class="text-sm text-center">Запомнить?</label>
-    </div>
-
-    <p-button class="w-full" styleClass="w-full" variant="outlined"
-      >Войти</p-button
-    >
-  </form>
-  <span class="text-xs"
-    >У вас нет учетной записи?
-    <span class="text-sm cursor-pointer font-bold"
-      >Зарегистрируйтесь</span
-    ></span
+<div class="auth-wrapper">
+  <p-card
+    class="card-auth"
+    [@authState]="currentState"
+    (@authState.start)="startAnimation()"
+    (@authState.done)="doneAnimation()"
   >
-  <p-divider />
-  <p class="text-center">Войти через</p>
-  <div class="flex gap-2 m-2 justify-center">
-    <p-button
-      variant="outlined"
-      styleClass="p-2"
-      [pTooltip]="'ЭЦП'"
-      tooltipPosition="top"
-      [disabled]="true"
+    @if (showAuth) {
+    <ng-template #header>
+      <p class="text-xl text-center m-3">Добро пожаловать</p>
+    </ng-template>
+    <form class="card-auth-form w-full" [formGroup]="authForm" (submit)="submitAuth()">
+      <input
+        class="w-full"
+        pInputText
+        id="username"
+        formControlName="username"
+        placeholder="Логин"
+      />
+      <p-password
+        class="w-full"
+        id="password"
+        [feedback]="false"
+        formControlName="password"
+        placeholder="Пароль"
+        [toggleMask]="true"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+      ></p-password>
+      <div class="w-full flex gap-4 items-center">
+        <p-toggleSwitch id="remeber" formControlName="remeber"/>
+        <label for="remeber" class="text-sm text-center">Запомнить?</label>
+      </div>
+
+      <p-button class="w-full" styleClass="w-full" variant="outlined" type="submit"
+        >Войти</p-button
+      >
+    </form>
+    <span class="text-xs"
+      >У вас нет учетной записи?
+      <span
+        class="text-sm cursor-pointer font-bold"
+        (click)="changeState('register')"
+        >Зарегистрируйтесь</span
+      ></span
     >
-      <i class="pi pi-key"></i>
-    </p-button>
-    @for (service of services; track service.name) {
-    <p-button
-      variant="outlined"
-      styleClass="p-2"
-      [pTooltip]="service.tooltip"
-      tooltipPosition="top"
-      [disabled]="service.disabled"
-    >
-      <img class="w-4 h-4" [src]="'assets/systems/' + service.icon" />
-    </p-button>
+    <p-divider />
+    <p class="text-center">Войти через</p>
+    <div class="flex gap-2 m-2 justify-center">
+      <p-button
+        variant="outlined"
+        styleClass="p-2"
+        [pTooltip]="'ЭЦП'"
+        tooltipPosition="top"
+        [disabled]="true"
+      >
+        <i class="pi pi-key"></i>
+      </p-button>
+      @for (service of services; track service.name) {
+      <p-button
+        variant="outlined"
+        styleClass="p-2"
+        [pTooltip]="service.tooltip"
+        tooltipPosition="top"
+        [disabled]="service.disabled"
+      >
+        <img class="w-4 h-4" [src]="'assets/systems/' + service.icon" />
+      </p-button>
+      }
+    </div>
     }
-  </div>
-</p-card>
+  </p-card>
+  <p-card
+    class="card-register"
+    [@registerState]="currentState"
+    (@registerState.start)="startAnimation()"
+    (@registerState.done)="doneAnimation()"
+  >
+    @if (showRegister) {
+
+    <ng-template #header>
+      <div class="register-header">
+        <p-button
+          class="start-header"
+          variant="outlined"
+          pTooltip="Назад"
+          tooltipPosition="bottom"
+          (click)="changeState('auth')"
+        >
+          <i class="pi pi-angle-left"></i>
+        </p-button>
+        <p class="text-xl text-center m-3">Форма регистрации</p>
+        <div class="end-header"></div>
+      </div>
+    </ng-template>
+    <form class="register-form" [formGroup]="registerForm">
+      <div class="base-form">
+        <div class="w-full text-center text-sm">
+          <span class="">Основное</span>
+          <p-divider />
+        </div>
+        <p-iftaLabel>
+          <input
+            class="w-full"
+            pInputText
+            id="username"
+            formControlName="username"
+          />
+          <label for="username">Логин</label>
+        </p-iftaLabel>
+        <p-iftaLabel>
+          <input class="w-full" pInputText id="email" formControlName="email" />
+          <label for="email">Почта</label>
+        </p-iftaLabel>
+        <p-iftaLabel>
+          <p-password
+            class="w-full"
+            id="password"
+            formControlName="password"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            promptLabel="Выберите пароль"
+            weakLabel="Слишком просто"
+            mediumLabel="Средняя сложность"
+            strongLabel="Сложный пароль"
+          ></p-password>
+          <label for="password">Пароль</label>
+        </p-iftaLabel>
+        <p-iftaLabel>
+          <p-password
+            class="w-full"
+            id="replyPassword"
+            formControlName="replyPassword"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            [feedback]="false"
+          ></p-password>
+          <label for="replyPassword">Повторение пароля</label>
+        </p-iftaLabel>
+      </div>
+      <div class="profile-form">
+        <div class="w-full text-center text-sm">
+          <span class="">Профиль</span>
+          <p-divider />
+        </div>
+        <p-iftaLabel>
+          <p-inputmask
+            id="phone"
+            formControlName="phone"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            mask="(999) 999-9999"
+            placeholder="(999) 999-9999"
+          />
+          <label for="phone">Телефон</label>
+        </p-iftaLabel>
+        <p-iftaLabel>
+          <input
+            class="w-full"
+            pInputText
+            id="firstname"
+            formControlName="firstname"
+          />
+          <label for="firstname">Имя</label>
+        </p-iftaLabel>
+        <p-iftaLabel>
+          <input
+            class="w-full"
+            pInputText
+            id="lastname"
+            formControlName="lastname"
+          />
+          <label for="lastname">Фамилия</label>
+        </p-iftaLabel>
+        <p-iftaLabel>
+          <input
+            class="w-full"
+            pInputText
+            id="middlename"
+            formControlName="middlename"
+          />
+          <label for="middlename">Отчество</label>
+        </p-iftaLabel>
+        <p-iftaLabel>
+          <p-datepicker
+            class="w-full"
+            id="datebirth"
+            formControlName="datebirth"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            dateFormat="dd.mm.yy"
+          />
+          <label for="datebirth">Дата рождения</label>
+        </p-iftaLabel>
+      </div>
+      <div class="register-button">
+        <p-button class="w-full" styleClass="w-full" variant="outlined"
+          >Зарегистрироваться</p-button
+        >
+      </div>
+    </form>
+    }
+  </p-card>
+</div>

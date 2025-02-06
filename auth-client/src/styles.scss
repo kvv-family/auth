@@ -13,11 +13,60 @@
   @tailwind utilities;
 }
 
-.card-auth {
-  max-width: 400px;
-  max-height: 500px;
+.auth-wrapper {
   display: flex;
   margin: auto;
+  max-width: 600px;
+  justify-content: center;
+  
+  .card-auth {
+    width: 400px;
+    max-height: 500px;
+  }
+
+  .card-register {
+    width: 600px;
+    max-height: 500px;
+
+    .register-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0 1rem;
+
+      .end-header {
+        width: 42px;
+      }
+    }
+
+    .register-form {
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      grid-template-rows: 27rem 1fr; 
+      gap: 2rem 1rem; 
+      grid-template-areas: 
+        "base profile"
+        "button button";
+
+      .base-form {
+        grid-area: base;
+        display: flex;
+        flex-direction: column;
+        row-gap: 1rem;
+      }
+
+      .profile-form {
+        grid-area: profile;
+        display: flex;
+        flex-direction: column;
+        row-gap: 1rem;
+      }
+
+      .register-button {
+        grid-area: button;
+      }
+    }
+  }
 
   .p-card-title {
     text-align: center;

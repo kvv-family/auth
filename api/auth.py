@@ -70,12 +70,17 @@ async def authorize_post(
     response: Response,
     username: Annotated[str, Form()],
     password: Annotated[str, Form()],
-    client_id: Annotated[str, Form()],
-    scope: Annotated[str, Form()],
-    state: Annotated[str, Form()],
+    client_id: Annotated[str, Form()] = None,
+    scope: Annotated[str, Form()] = None,
+    state: Annotated[str, Form()] = None,
     redirect_uri: Annotated[str | None, Form()] = None,
     form: Annotated[Literal["form", "api"], Form()] = "form",
 ):
+    if not client_id or not scope:
+        if form == "form":
+            raise AuthorizeTemplateException(detail="Не правильный запрос")
+        else:
+            raise HTTPException(status_code=422, detail="Не правильный запрос")
     try:
         # Блок получения клиента
         client = clients.get_client(client_id=client_id, redirect_uri=redirect_uri)

@@ -16,9 +16,7 @@ app = FastAPI()
 check_keys_file_exists()
 initialize_db()
 
-origins = [
-    "http://localhost:8011",
-]
+origins = ["http://localhost:8011", "http://localhost:4200"]
 
 app.add_middleware(
     CORSMiddleware,
